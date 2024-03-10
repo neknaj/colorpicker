@@ -78,14 +78,22 @@ function ColorPicker(colorpicker,handleSize,margin) {
     const distance = (p1,p2)=>{
         return Math.sqrt((p2[0]-p1[0])**2+(p2[1]-p1[1])**2);
     }
+    const setValue = (h,s,l)=>{
+        console.log(h,s,l)
+        Handle_Hue = Math.min(Math.max(Math.floor(h),0),360);
+        Handle_Saturation = Math.min(Math.max(Math.floor(s),0),360);
+        Handle_Luminance = Math.min(Math.max(Math.floor(l),0),360);
+        UpdateUI();
+        return true;
+    }
     UpdateUI();
     colorpicker.onpointerdown = (e)=>{
         const p = getPointer(e);
         const Handle_Hue_theta = Handle_Hue*Math.PI/180;
         const arcR = (256-handleSize)/2;
-        let h = distance(p,[Math.cos(Handle_Hue_theta)*arcR+128+margin,Math.sin(Handle_Hue_theta)*arcR+128])<handleSize;
-        let s = distance(p,[256+margin*2+handleSize*0.5,(100-Handle_Saturation)*(256-handleSize)/100+margin+handleSize/2])<handleSize;
-        let l = distance(p,[256+margin*3+handleSize*1.5,(100-Handle_Luminance)*(256-handleSize)/100+margin+handleSize/2])<handleSize;
+        let h = distance(p,[128+margin,128+margin])>128-handleSize&&distance(p,[128+margin,128+margin])<128;
+        let s = p[0]>256+margin*2&&p[0]<256+margin*2+handleSize;
+        let l = p[0]>256+margin*3+handleSize&&p[0]<256+margin*3+handleSize*2;
         Handle_stat = 0;
         if (h) Handle_stat = 1;
         if (s) Handle_stat = 2;
@@ -93,6 +101,7 @@ function ColorPicker(colorpicker,handleSize,margin) {
         if (Handle_stat!=0) {
             e.target.setPointerCapture(e.pointerId);
         }
+        colorpicker.onpointermove(e);
     }
     colorpicker.onpointerup = (e)=>{
         Handle_stat = 0;
@@ -122,4 +131,5 @@ function ColorPicker(colorpicker,handleSize,margin) {
         }
         colorpicker.dataset.value = [Handle_Hue,Handle_Saturation,Handle_Luminance].join(",");
     }
+    return setValue;
 }

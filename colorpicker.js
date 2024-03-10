@@ -66,7 +66,7 @@ function ColorPicker(colorpicker,handleSize,margin) {
             {
                 ctx.font = "25px serif";
                 ctx.textAlign = "center";
-                ctx.fillStyle = `hsl(${180-Handle_Hue}deg,${100-Handle_Saturation}%,${100-Handle_Luminance}%)`;
+                ctx.fillStyle = `hsl(${180-Handle_Hue}deg,${100-Handle_Saturation}%,${100-Math.floor(Handle_Luminance/50)*100}%)`;
                 ctx.fillText(`${Handle_Hue},${Handle_Saturation},${Handle_Luminance}`, 128+margin, 128+margin+10);
             }
         }
